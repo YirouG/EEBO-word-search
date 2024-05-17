@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Pattern Search Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Word Pattern Search Tool</h1>
+    <form action="/search" method="post">
+        <label for="pattern">Pattern:</label>
+        <input type="text" id="pattern" name="pattern" required>
+        <button type="submit">Search</button>
+    </form>
+    {% if results is not none %}
+        <h2>Results for "{{ pattern }}":</h2>
+        <ul>
+            {% for result in results %}
+                <li>{{ result }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
