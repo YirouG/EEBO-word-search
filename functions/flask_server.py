@@ -1,42 +1,20 @@
+import sys
 import os
-from flask import Flask, request, render_template
-from flask_cors import CORS
-import re
 
-app = Flask(__name__)
-CORS(app)
+# Ensure the app's directory is in the sys.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 
-class WordPatternSearcher:
-    def __init__(self, corpus_file):
-        self.corpus_file = corpus_file
-        self.words = self.load_words()
+from app import app
 
-    def load_words(self):
-        with open(self.corpus_file, 'r', encoding='utf-8') as file:
-            text = file.read().lower()
-        words = re.findall(r'\b\w+\b', text)
-        return words
+from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.wrappers import Request, Response
 
-    def convert_pattern_to_regex(self, pattern):
-        regex_pattern = re.escape(pattern).replace(r'\*', '.*').replace(r'\?', '.')
-        return f'^{regex_pattern}$'
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 
-    def search(self, pattern):
-        regex_pattern = self.convert_pattern_to_regex(pattern)
-        regex = re.compile(regex_pattern)
-        return [word for word in self.words if regex.search(word)]
+def handler(event, context):
+    @Request.application
+    def application(request):
+        return Response('Hello from Flask!', mimetype='text/plain')
 
-searcher = WordPatternSearcher(os.path.join(os.path.dirname(__file__), 'corpus.txt'))
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/search', methods=['POST'])
-def search():
-    pattern = request.form['pattern']
-    results = searcher.search(pattern)
-    return render_template('index.html', results=results, pattern=pattern)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return app
