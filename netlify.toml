@@ -1,6 +1,8 @@
 [build]
   functions = "functions"
-  command = "pip install -r requirements.txt"
+  command = "pip install -r requirements.txt && python functions/flask_server.py"
 
-[dev]
-  functions = "functions"
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/flask_server"
+  status = 200
