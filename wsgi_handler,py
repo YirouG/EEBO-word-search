@@ -1,0 +1,6 @@
+from flask_server import app
+
+def handler(event, context):
+    from netlify_wsgi import NetlifyWsgi
+    wsgi_handler = NetlifyWsgi(app)
+    return wsgi_handler(event, context)

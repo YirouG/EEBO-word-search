@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request, render_template
 from flask_cors import CORS
-from netlify import functions
 import re
 
 app = Flask(__name__)
@@ -39,6 +38,5 @@ def search():
     results = searcher.search(pattern)
     return render_template('index.html', results=results, pattern=pattern)
 
-@functions.handler
-def handler(event, context):
-    return app(event, context)
+if __name__ == "__main__":
+    app.run(debug=True)
