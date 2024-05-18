@@ -7,19 +7,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Word Pattern Search Tool</h1>
-    <form action="/search" method="post">
-        <label for="pattern">Pattern:</label>
-        <input type="text" id="pattern" name="pattern" required>
-        <button type="submit">Search</button>
-    </form>
-    {% if results is not none %}
-        <h2>Results for "{{ pattern }}":</h2>
-        <ul>
-            {% for result in results %}
-                <li>{{ result }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="container">
+        <h1>Word Pattern Search Tool</h1>
+        <form action="/search" method="post">
+            <label for="pattern">Pattern:</label>
+            <input type="text" id="pattern" name="pattern" placeholder="Enter pattern (e.g., 'ca*', '?at')" required>
+            <button type="submit">Search</button>
+        </form>
+        {% if results is not none %}
+            <div class="results">
+                <h2>Results for "{{ pattern }}":</h2>
+                <ul>
+                    {% for result in results %}
+                        <li>{{ result }}</li>
+                    {% endfor %}
+                </ul>
+                <p class="summary">The result of search "{{ pattern }}" is {{ results|length }} words found.</p>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
