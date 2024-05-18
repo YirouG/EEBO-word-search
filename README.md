@@ -19,7 +19,7 @@ This repository contains a Flask-based web application for searching word patter
 
 1. **Download the Executable:**
 
-   - Go to the [Releases](https://github.com/YirouG/EEBO-word-search/releases) section of this repository.
+   - Go to the dist folder of this repository.
    - Download the latest `app.exe` file from the assets.
 
 2. **Extract the ZIP file (if applicable):**
