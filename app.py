@@ -1,5 +1,10 @@
 from flask import Flask, request, render_template
 import re
+import threading
+import webbrowser
+import os
+import sys
+import time
 
 app = Flask(__name__)
 
@@ -23,7 +28,14 @@ class WordPatternSearcher:
         regex = re.compile(regex_pattern)
         return [word for word in self.words if regex.search(word)]
 
-searcher = WordPatternSearcher('corpus.txt')
+# Determine if the script is running as a frozen executable
+if getattr(sys, 'frozen', False):
+    base_dir = sys._MEIPASS
+else:
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+
+# Create the searcher with the correct path to corpus.txt
+searcher = WordPatternSearcher(os.path.join(base_dir, 'corpus.txt'))
 
 @app.route('/')
 def index():
@@ -35,5 +47,11 @@ def search():
     results = searcher.search(pattern)
     return render_template('index.html', results=results, pattern=pattern)
 
+def open_browser():
+    webbrowser.open_new('http://127.0.0.1:5000/')
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    threading.Timer(1, open_browser).start()  # Open the browser after 1 second
+    app.run(port=5000, debug=False, use_reloader=False)  # Ensure the server runs in the main thread
+    while True:
+        time.sleep(1)  # Keep the main thread running
